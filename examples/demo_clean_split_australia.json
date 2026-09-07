@@ -1,0 +1,20 @@
+{
+  "template": "clean_split",
+  "palette": "teal_coral",
+  "eyebrow": "STEP TODAY, LEAD TOMORROW!",
+  "badge_text": "LEARN. EARN. GROW.",
+  "headline_lines": [
+    {"text": "STUDY AND", "color": "navy"},
+    {"text": "PAID INTERNSHIP", "color": "gold"},
+    {"text": "IN AUSTRALIA", "color": "navy"}
+  ],
+  "tagline": "Gain Knowledge. Earn Experience. Build Your Career.",
+  "discount_text": "30% DISCOUNT",
+  "requirements": ["Age 18 to 35", "High School Graduated", "Valid Passport", "Basic English"],
+  "requirements_icons": ["calendar", "graduation-cap", "passport", "language"],
+  "benefits": ["Quality Education", "Paid Internship", "Career Growth", "International Exposure"],
+  "benefits_icons": ["book", "briefcase", "check-circle", "globe"],
+  "contact_lines": [{"icon": "phone", "text": "+61 4000 0000"}],
+  "cta": "YOUR JOURNEY STARTS HERE! ENROLL NOW!",
+  "photos": {"hero": "sydney_students.jpg"}
+}

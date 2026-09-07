@@ -1,0 +1,56 @@
+{
+  "template": "clean_split",
+  "palette": "navy_gold",
+  "eyebrow": "STEP TODAY, LEAD TOMORROW!",
+  "badge_text": "LEARN. EARN. GROW.",
+  "headline_lines": [
+    {
+      "text": "STUDY AND",
+      "color": "navy"
+    },
+    {
+      "text": "PAID INTERNSHIP",
+      "color": "gold"
+    },
+    {
+      "text": "IN SINGAPORE",
+      "color": "navy"
+    }
+  ],
+  "tagline": "Gain Knowledge. Earn Experience. Build Your Career.",
+  "discount_text": "50% DISCOUNT",
+  "requirements": [
+    "Age 18 to 40",
+    "High School Graduated",
+    "Valid Passport",
+    "Basic English"
+  ],
+  "requirements_icons": [
+    "calendar",
+    "graduation-cap",
+    "passport",
+    "language"
+  ],
+  "benefits": [
+    "Quality Education",
+    "Paid Internship",
+    "Career Growth",
+    "International Exposure"
+  ],
+  "benefits_icons": [
+    "book",
+    "briefcase",
+    "check-circle",
+    "globe"
+  ],
+  "contact_lines": [
+    {
+      "icon": "phone",
+      "text": "+65 92450213"
+    }
+  ],
+  "cta": "YOUR JOURNEY STARTS HERE! ENROLL NOW!",
+  "photos": {
+    "hero": "students_group.jpg"
+  }
+}

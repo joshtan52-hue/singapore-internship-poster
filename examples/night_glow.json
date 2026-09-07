@@ -1,0 +1,38 @@
+{
+  "template": "night_glow",
+  "palette": "burgundy_cream",
+  "headline_lines": [
+    {
+      "text": "STUDY +"
+    },
+    {
+      "text": "INTERNSHIP"
+    }
+  ],
+  "subtitle": "IN SINGAPORE",
+  "brand_pill_text": "APPLY NOW",
+  "session_heading": "JOIN THE PROGRAM",
+  "session_description": "Study for 6 months, then step into a 6-month paid internship in Singapore. Build real career experience with a guaranteed placement.",
+  "bottom_description": "From application to your first paycheck, we guide you through visa processing, enrollment, and internship placement every step of the way.",
+  "requirements": [
+    "Minimum High School Graduate",
+    "Basic English Literacy",
+    "No Agent Fee",
+    "Guaranteed Paid Internship"
+  ],
+  "requirements_icons": [
+    "graduation-cap",
+    "language",
+    "handshake",
+    "briefcase"
+  ],
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 92450213"
+    }
+  ],
+  "photos": {
+    "hero": "photo_h.jpg"
+  }
+}

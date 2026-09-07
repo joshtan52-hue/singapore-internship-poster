@@ -1,0 +1,26 @@
+{
+  "template": "luggage_tag",
+  "palette": "navy_gold",
+  "ribbon_text": "YOUR TICKET OUT — LUGGAGE TAG TO SINGAPORE",
+  "headline_lines": [
+    {"text": "STUDY + PAID INTERNSHIP", "color": "navy"},
+    {"text": "DESTINATION: SINGAPORE", "color": "gold"}
+  ],
+  "badge_text": "GUARANTEED INTERNSHIP IN SG!",
+  "duration_text": "1 YEAR STUDENT PASS",
+  "benefits_heading": "INCLUDED WITH YOUR PASS",
+  "benefits": [
+    "Guaranteed Internship in Singapore",
+    "Visa Application Assistance",
+    "Affordable Fees with Instalments",
+    "Direct To School, No Agency Fees"
+  ],
+  "stamp_text": "INTAKE OPEN NOW",
+  "footer_banner_text": "LIMITED SLOTS AVAILABLE FOR THIS INTAKE",
+  "cta": "APPLY NOW!",
+  "contact_lines": [{"icon": "whatsapp", "text": "+65 92450213"}],
+  "photos": {
+    "hero": "photo_new1.jpg",
+    "secondary": ["group_study_2.jpg", "photo_d.jpg"]
+  }
+}

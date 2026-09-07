@@ -1,0 +1,49 @@
+{
+  "template": "elegant_pills",
+  "palette": "burgundy_cream",
+  "eyebrow": "STUDY AND PAID INTERNSHIP",
+  "headline_lines": [
+    {
+      "text": "STUDY AND",
+      "color": "navy"
+    },
+    {
+      "text": "PAID INTERNSHIP",
+      "color": "gold"
+    },
+    {
+      "text": "IN MALAYSIA",
+      "color": "navy"
+    }
+  ],
+  "tagline": "Build Your Future in a World-Class Destination",
+  "benefits": [
+    "Minimum High School Graduate",
+    "Basic English Literacy",
+    "Installment Plan Supported",
+    "School Fee Discounted 35%",
+    "No Agent Fee",
+    "Guaranteed Paid Internship"
+  ],
+  "benefits_icons": [
+    "graduation-cap",
+    "language",
+    "calendar",
+    "percent",
+    "handshake",
+    "briefcase"
+  ],
+  "contact_label": "FOR MORE INFORMATION, WHATSAPP ME AT:",
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+60 1200 0000"
+    }
+  ],
+  "photos": {
+    "hero": "petronas.jpg",
+    "secondary": [
+      "kl_tower.jpg"
+    ]
+  }
+}

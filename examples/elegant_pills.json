@@ -1,0 +1,49 @@
+{
+  "template": "elegant_pills",
+  "palette": "green_gold",
+  "eyebrow": "STUDY AND PAID INTERNSHIP",
+  "headline_lines": [
+    {
+      "text": "STUDY AND",
+      "color": "navy"
+    },
+    {
+      "text": "PAID INTERNSHIP",
+      "color": "gold"
+    },
+    {
+      "text": "IN SINGAPORE",
+      "color": "navy"
+    }
+  ],
+  "tagline": "Build Your Future in a World-Class Destination",
+  "benefits": [
+    "Minimum High School Graduate",
+    "Basic English Literacy",
+    "Installment Plan Supported",
+    "School Fee Discounted 40%",
+    "No Agent Fee",
+    "Guaranteed Paid Internship"
+  ],
+  "benefits_icons": [
+    "graduation-cap",
+    "language",
+    "calendar",
+    "percent",
+    "handshake",
+    "briefcase"
+  ],
+  "contact_label": "FOR MORE INFORMATION, WHATSAPP ME AT:",
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 92450213"
+    }
+  ],
+  "photos": {
+    "hero": "merlion.jpg",
+    "secondary": [
+      "marina_bay_sands.jpg"
+    ]
+  }
+}

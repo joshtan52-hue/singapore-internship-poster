@@ -1,0 +1,32 @@
+{
+  "template": "torn_paper",
+  "palette": "red_navy",
+  "headline_lines": [
+    {
+      "text": "SINGAPORE",
+      "color": "primary"
+    }
+  ],
+  "tagline": "Study + Paid Internship",
+  "discount_text": "50% OFF",
+  "benefits_heading": "BENEFITS",
+  "benefits": [
+    "Fast visa processing",
+    "No need experience",
+    "Accommodation Assistance",
+    "Affordable school Fees"
+  ],
+  "contact_lines": [
+    {
+      "icon": "phone",
+      "text": "+65 92450213"
+    }
+  ],
+  "photos": {
+    "hero": "skyline.jpg",
+    "secondary": [
+      "skyline_small.jpg",
+      "merlion.jpg"
+    ]
+  }
+}

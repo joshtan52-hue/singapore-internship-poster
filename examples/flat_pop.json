@@ -1,0 +1,33 @@
+{
+  "template": "flat_pop",
+  "palette": "green_gold",
+  "eyebrow": "APPLICATIONS",
+  "badge_text": "LIMITED SEATS THIS INTAKE",
+  "headline_lines": [
+    {
+      "text": "1 YEAR",
+      "color": "navy"
+    },
+    {
+      "text": "STUDENT PASS",
+      "color": "navy"
+    }
+  ],
+  "tagline": "on our study + paid internship program in Singapore",
+  "closing_lines": [
+    "ONLY UNTIL",
+    "INTAKE CLOSES!"
+  ],
+  "cta": "Book your spot now at",
+  "brand_name": "STUDY SINGAPORE",
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 9245 0213"
+    }
+  ],
+  "photos": {
+    "hero": "group_study_1.jpg"
+  },
+  "stamp_text": "SINGAPORE"
+}

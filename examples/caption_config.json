@@ -1,0 +1,25 @@
+{
+  "country": "Singapore",
+  "flag_emoji": "🇸🇬",
+  "phone": "+65 92450213",
+  "visa_note": "1-year Singapore visa provided for passport holders",
+  "benefit_groups": [
+    ["6 Months Study"],
+    ["6 Months Paid On-the-Job Training", "6 Months Paid OJT", "6 Months Paid Internship", "Paid Internship"],
+    ["International Diploma"],
+    ["Attractive OJT Salary", "Attractive Internship Allowance"],
+    ["Limited Intake"],
+    ["No Agent Fee", "No Agent Fees", "No Agency Fee"],
+    ["Affordable Tuition Fee"],
+    ["Installment Payment Available", "Flexible Payment Options"],
+    ["Gain International Experience"]
+  ],
+  "industries_label": "Available industries:",
+  "industries": [
+    "Retail",
+    "Office",
+    "F&B",
+    "Customer Service",
+    "Marketing & Sales"
+  ]
+}

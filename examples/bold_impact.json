@@ -1,0 +1,53 @@
+{
+  "template": "bold_impact",
+  "palette": "red_navy",
+  "eyebrow": "KICKSTART YOUR GLOBAL CAREER!",
+  "badge_text": "YOUR FUTURE STARTS HERE!",
+  "headline_lines": [
+    {
+      "text": "STUDY + INTERNSHIP",
+      "color": "navy"
+    },
+    {
+      "text": "IN SINGAPORE",
+      "color": "primary"
+    }
+  ],
+  "tagline": "Learn. Grow. Succeed in Asia's Global Hub.",
+  "requirements": [
+    "Age 18 to 40 years old",
+    "High School Graduate / 'O' Levels",
+    "Basic English skills"
+  ],
+  "requirements_icons": [
+    "calendar",
+    "graduation-cap",
+    "language"
+  ],
+  "benefits": [
+    "Visa Assistance",
+    "Guaranteed Internship",
+    "Affordable Fees",
+    "No Agent Fees"
+  ],
+  "benefits_icons": [
+    "id-card",
+    "briefcase",
+    "dollar",
+    "check-circle"
+  ],
+  "benefits_extra": [
+    "Diploma in Business & Sales",
+    "Diploma in Hospitality & Tourism"
+  ],
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 92450213"
+    }
+  ],
+  "cta": "CONTACT US TODAY!",
+  "photos": {
+    "hero": "skyline.jpg"
+  }
+}

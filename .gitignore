@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Rendered output (keep the repo to source + examples, not generated posters)
+*.png
+!examples/**/*.png
+output/
+outputs/
+
+# Personal photo library contents (keep the folder, not your own photos)
+assets/photo_library/*
+!assets/photo_library/README.md

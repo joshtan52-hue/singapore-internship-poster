@@ -1,0 +1,51 @@
+{
+  "template": "postcard",
+  "palette": "navy_gold",
+  "headline_lines": [
+    {
+      "text": "GREETINGS FROM",
+      "color": "gold"
+    },
+    {
+      "text": "SINGAPORE",
+      "color": "bg"
+    }
+  ],
+  "stamp_country": "SINGAPORE",
+  "stamp_denomination": "AIRMAIL",
+  "postmark_text": "APPLY TODAY",
+  "note_heading": "A quick note...",
+  "note_text": "Come study, intern, and earn in Singapore! Message me for the visa process and I'll walk you through it.",
+  "benefits": [
+    "Guaranteed Paid Internship",
+    "International Diploma",
+    "Visa Application Assistance",
+    "No Agency Fees"
+  ],
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 9245 0213"
+    }
+  ],
+  "closer_text": "SEND THIS TO YOURSELF \u2014 YOUR FUTURE IS WAITING",
+  "photos": {
+    "hero": "photo_h.jpg"
+  },
+  "ps_text": "P.S. No agency fees, ever -- you deal with the school directly.",
+  "who_heading": "Who can apply?",
+  "requirements": [
+    "Age 18 to 40",
+    "High school graduate",
+    "Valid passport",
+    "Basic English"
+  ],
+  "duration_text": "1 YEAR STUDENT PASS",
+  "industries": [
+    "Retail",
+    "Office",
+    "F&B",
+    "Customer Service",
+    "Marketing & Sales"
+  ]
+}

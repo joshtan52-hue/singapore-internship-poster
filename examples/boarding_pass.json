@@ -1,0 +1,42 @@
+{
+  "template": "boarding_pass",
+  "palette": "navy_gold",
+  "from_code": "HOME",
+  "from_city": "Wherever you are",
+  "to_code": "SIN",
+  "to_city": "Singapore",
+  "passenger_label": "PASSENGER",
+  "passenger_value": "YOU",
+  "status_label": "STATUS",
+  "status_value": "CONFIRMED",
+  "boarding_fields": [
+    {
+      "label": "PROGRAM",
+      "value": "DIPLOMA + PAID INTERNSHIP"
+    },
+    {
+      "label": "DURATION",
+      "value": "1 YEAR PASS"
+    },
+    {
+      "label": "INTAKE",
+      "value": "OPEN NOW"
+    },
+    {
+      "label": "FEES",
+      "value": "NO AGENCY FEE"
+    }
+  ],
+  "ticket_code": "SG-2026-INTAKE",
+  "stamp_text": "BOARDING NOW",
+  "cta": "Your boarding pass to Singapore is ready. Message me to reserve your seat.",
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 9245 0213"
+    }
+  ],
+  "photos": {
+    "hero": "girl_passport_mbs.jpg"
+  }
+}

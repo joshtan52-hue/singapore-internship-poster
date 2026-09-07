@@ -1,0 +1,17 @@
+{
+  "template": "movie_poster",
+  "palette": "navy_gold",
+  "presents_text": "STUDY SINGAPORE PRESENTS",
+  "headline_lines": [
+    {"text": "YOUR FUTURE", "color": "bg"},
+    {"text": "STARTS HERE", "color": "gold"}
+  ],
+  "tagline": "One diploma. One paid internship. One life-changing move to Singapore.",
+  "starring_text": "STARRING: YOU",
+  "rating_text": "APPROVED · AGES 18-40",
+  "credits": ["PAID INTERNSHIP", "INTERNATIONAL DIPLOMA", "VISA ASSISTANCE", "NO AGENCY FEES"],
+  "release_text": "NOW ENROLLING · INTAKE OPEN",
+  "cta": "MESSAGE US TO APPLY",
+  "contact_lines": [{"icon": "whatsapp", "text": "+65 9245 0213"}],
+  "photos": {"hero": "fullerton_boardwalk_night.jpg"}
+}

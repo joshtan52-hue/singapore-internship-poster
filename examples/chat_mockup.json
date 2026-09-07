@@ -1,0 +1,18 @@
+{
+  "template": "chat_mockup",
+  "palette": "green_gold",
+  "contact_name": "Study Singapore",
+  "contact_status": "Online",
+  "messages": [
+    {"from": "them", "text": "Hi! I saw your Singapore internship post -- is it really no agency fees?"},
+    {"from": "me", "text": "Yes! 100% no agency fees. Just 6 months study + 6 months paid internship, with an international diploma included."},
+    {"from": "them", "text": "Wow that's amazing, how do I start?"},
+    {"from": "me", "photo": true},
+    {"from": "me", "text": "This was our last batch landing in Singapore! Message me your name + WhatsApp number and I'll send the application link."}
+  ],
+  "input_placeholder": "Type a message...",
+  "photos": {
+    "hero": "girl_passport_mbs.jpg",
+    "secondary": ["students_group_mrt.jpg"]
+  }
+}

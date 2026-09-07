@@ -1,0 +1,34 @@
+{
+  "template": "magazine_split",
+  "palette": "red_navy",
+  "masthead_title": "THE SINGAPORE OPPORTUNITY",
+  "masthead_subtitle": "INTERNATIONAL STUDENT EDITION  ·  INTAKE NOW OPEN",
+  "headline_lines": [
+    {"text": "Study + Paid Internship", "color": "navy"},
+    {"text": "in Singapore", "color": "primary"}
+  ],
+  "duration_text": "1 YEAR PASS",
+  "hero_caption": "SINGAPORE · Where your international career begins.",
+  "benefits_heading": "WHAT YOU GET",
+  "benefits": [
+    "Guaranteed internship",
+    "Visa application help",
+    "Instalment plans",
+    "No agency fees"
+  ],
+  "benefits_icons": ["briefcase", "id-card", "dollar", "check-circle"],
+  "footer_banner_text": "LIMITED SLOTS FOR THIS INTAKE",
+  "cta": "DM ME TO START YOUR APPLICATION",
+  "stamp_text": "APPLY NOW",
+  "cta_short": "ENQUIRE TODAY!",
+  "contact_lines": [{"icon": "whatsapp", "text": "+65 92450213"}],
+  "photos": {
+    "hero": "photo_h.jpg",
+    "secondary": ["girl_passport_mbs.jpg"],
+    "gallery": [
+      {"file": "group_study_1.jpg", "label": "Real Classes"},
+      {"file": "photo_new1.jpg", "label": "Real Students"},
+      {"file": "photo_d.jpg", "label": "Real Singapore"}
+    ]
+  }
+}

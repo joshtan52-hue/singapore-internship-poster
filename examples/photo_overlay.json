@@ -1,0 +1,38 @@
+{
+  "template": "photo_overlay",
+  "palette": "navy_gold",
+  "eyebrow": "STUDY + PAID INTERNSHIP",
+  "discount_text": "50% OFF",
+  "headline_lines": [
+    {
+      "text": "YOUR FUTURE",
+      "color": "primary"
+    },
+    {
+      "text": "STARTS IN SINGAPORE",
+      "color": "gold"
+    }
+  ],
+  "tagline": "Study. Intern. Earn. Grow.",
+  "benefits": [
+    "Visa Assistance",
+    "Paid Internship",
+    "No Agent Fee",
+    "Affordable Fees"
+  ],
+  "benefits_icons": [
+    "id-card",
+    "briefcase",
+    "check-circle",
+    "dollar"
+  ],
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 92450213"
+    }
+  ],
+  "photos": {
+    "hero": "students_skyline.jpg"
+  }
+}

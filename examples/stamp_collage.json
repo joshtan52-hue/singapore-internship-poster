@@ -1,0 +1,32 @@
+{
+  "template": "stamp_collage",
+  "palette": "teal_coral",
+  "ribbon_text": "COLLECT YOUR TICKET TO SINGAPORE",
+  "headline_lines": [
+    {"text": "STUDY + PAID INTERNSHIP", "color": "primary"},
+    {"text": "IN SINGAPORE", "color": "gold"}
+  ],
+  "duration_text": "1 YEAR STUDENT PASS",
+  "badge_text": "NO AGENCY FEES",
+  "stamp_text": "INTAKE\nOPEN NOW",
+  "benefits_heading": "INCLUDED WITH YOUR PASS",
+  "benefits": [
+    "Guaranteed Internship in Singapore",
+    "Affordable Fees with Instalments",
+    "Visa Application Assistance",
+    "Direct To School, No Agency Fees"
+  ],
+  "footer_banner_text": "LIMITED SLOTS AVAILABLE FOR THIS INTAKE",
+  "cta": "CONTACT US TODAY!",
+  "contact_lines": [{"icon": "whatsapp", "text": "+65 92450213"}],
+  "photos": {
+    "gallery": [
+      {"file": "group_study_1.jpg", "label": "Real Students"},
+      {"file": "photo_d.jpg", "label": "Singapore"},
+      {"file": "group_study_2.jpg", "label": "Real Classes"},
+      {"file": "photo_new1.jpg", "label": "Real Experience"},
+      {"file": "girl_passport_mbs.jpg", "label": "World City"},
+      {"file": "photo_h.jpg", "label": "Real Community"}
+    ]
+  }
+}

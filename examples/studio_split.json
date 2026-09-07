@@ -1,0 +1,31 @@
+{
+  "template": "studio_split",
+  "palette": "navy_gold",
+  "brand_name": "STUDY SINGAPORE",
+  "headline_lines": [
+    {
+      "text": "STUDY +"
+    },
+    {
+      "text": "PAID"
+    },
+    {
+      "text": "INTERNSHIP"
+    }
+  ],
+  "body_text": "A structured program that takes you from the classroom into a real, paid role in Singapore \u2014 with visa support, no agency fees, and career coaching along the way.",
+  "cta": "APPLY NOW",
+  "website_text": "WhatsApp +65 9245 0213",
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 9245 0213"
+    }
+  ],
+  "photos": {
+    "hero": "students_group_mrt.jpg",
+    "secondary": [
+      "campus_study_hall_aerial.jpg"
+    ]
+  }
+}

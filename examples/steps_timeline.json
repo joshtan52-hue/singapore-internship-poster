@@ -1,0 +1,38 @@
+{
+  "template": "steps_timeline",
+  "palette": "navy_gold",
+  "eyebrow": "YOUR JOURNEY",
+  "headline_lines": [
+    {
+      "text": "HOW IT WORKS",
+      "color": "navy"
+    }
+  ],
+  "tagline": "From application to your first paycheck in Singapore.",
+  "steps": [
+    {
+      "title": "Apply Online",
+      "description": "Submit your application and documents \u2014 takes less than 10 minutes."
+    },
+    {
+      "title": "Get Your Visa",
+      "description": "We handle visa processing with fast approval rates."
+    },
+    {
+      "title": "Study",
+      "description": "Start your diploma programme with expert instructors."
+    },
+    {
+      "title": "Paid Internship",
+      "description": "Get placed in a guaranteed paid internship in Singapore."
+    }
+  ],
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 92450213"
+    }
+  ],
+  "cta": "START TODAY!",
+  "photos": {}
+}

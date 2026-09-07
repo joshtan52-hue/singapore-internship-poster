@@ -1,0 +1,14 @@
+{
+  "template": "neon_edge",
+  "palette": "teal_coral",
+  "edge_text": "STUDY IN SINGAPORE",
+  "brand_name": "STUDY SINGAPORE",
+  "duration_text": "1 YEAR STUDENT PASS",
+  "tagline": "on our study + paid internship program",
+  "closing_text": "INTAKE CLOSES SOON!",
+  "footer_line": "Message us to apply now",
+  "benefits": ["Paid Internship", "Visa Support", "Career Coaching"],
+  "benefits_icons": ["briefcase", "id-card", "handshake"],
+  "contact_lines": [{"icon": "whatsapp", "text": "+65 9245 0213"}],
+  "photos": {"hero": "skyline_night.jpg"}
+}

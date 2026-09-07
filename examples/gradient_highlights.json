@@ -1,0 +1,40 @@
+{
+  "template": "gradient_highlights",
+  "palette": "red_navy",
+  "brand_name": "STUDY SINGAPORE",
+  "headline_lines": [
+    {
+      "text": "Study &"
+    },
+    {
+      "text": "Paid Internship"
+    },
+    {
+      "text": "In Singapore"
+    }
+  ],
+  "tagline": "Discover how a 1-year study + internship program helps you build real career experience abroad.",
+  "badge_circle_text": "GROW YOUR CAREER IN SINGAPORE",
+  "section_heading": "Program Highlights",
+  "benefits": [
+    "Minimum High School Graduate",
+    "Basic English Literacy",
+    "Installment Plan Supported",
+    "No Agent Fee",
+    "Guaranteed Paid Internship"
+  ],
+  "footer_tagline_lines": [
+    "Start Your",
+    "Singapore Journey"
+  ],
+  "footer_icon": "graduation-cap",
+  "contact_lines": [
+    {
+      "icon": "whatsapp",
+      "text": "+65 92450213"
+    }
+  ],
+  "photos": {
+    "hero": "group_study_1.jpg"
+  }
+}

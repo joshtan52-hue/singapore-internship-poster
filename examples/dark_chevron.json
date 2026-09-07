@@ -1,0 +1,20 @@
+{
+  "template": "dark_chevron",
+  "palette": "navy_gold",
+  "brand_name": "STUDY SINGAPORE",
+  "side_heading": ["GROW YOUR", "CAREER"],
+  "tagline": "Our hands-on diploma includes:",
+  "diploma_points": [
+    "Practical, industry-aligned coursework",
+    "Small class sizes with hands-on instructors",
+    "Real workplace projects and case studies",
+    "Certification recognized by employers"
+  ],
+  "headline_lines": [
+    {"text": "THINK BIG", "color": "gold"},
+    {"text": "FOR YOUR FUTURE", "color": "bg"}
+  ],
+  "cta": "MESSAGE US",
+  "contact_lines": [{"icon": "whatsapp", "text": "+65 9245 0213"}],
+  "photos": {"hero": "photo_new1.jpg"}
+}

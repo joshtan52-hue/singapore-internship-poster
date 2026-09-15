@@ -1,0 +1,28 @@
+{
+  "template": "boarding_pass",
+  "palette": "navy_gold",
+  "from_code": "HOME",
+  "from_city": "Your City",
+  "to_code": "SIN",
+  "to_city": "Singapore",
+  "brand_name": "STUDY SINGAPORE",
+  "passenger_label": "PASSENGER",
+  "passenger_value": "YOU",
+  "status_label": "STATUS",
+  "status_value": "CONFIRMED",
+  "boarding_fields": [
+    {"label": "PROGRAM", "value": "DIPLOMA + INTERNSHIP"},
+    {"label": "DURATION", "value": "12 MONTHS"},
+    {"label": "INTAKE", "value": "OPEN NOW"},
+    {"label": "FEES", "value": "NO AGENCY FEE"}
+  ],
+  "ticket_code": "SG-2026-INTAKE",
+  "stamp_text": "BOARDING NOW",
+  "cta": "Message me to reserve your seat",
+  "contact_lines": [
+    {"icon": "whatsapp", "text": "+65 9245 0213"}
+  ],
+  "photos": {
+    "hero": "grad_group_pexels.jpg"
+  }
+}

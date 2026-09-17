@@ -14,6 +14,7 @@ count produces new combinations instead of the same caption every time.
 import argparse
 import json
 import random
+import sys
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -244,7 +245,12 @@ def build_long_caption(cfg, rng, used):
         # pick a subset of benefit facts -- most posts now show 5-7 (up from
         # 4-5) so the checklist itself carries more of the post's length
         n = min(len(groups), rng.randint(5, 7)) if len(groups) > 5 else len(groups)
-        idxs = sorted(rng.sample(range(len(groups)), n)) if groups else []
+        # Not sorted: when n == len(groups) (true whenever there are <=5
+        # fact groups, the common case for a flat `benefits` list), a sorted
+        # sample always comes back as 0..len-1 in order, so every caption
+        # would list the same facts in the same order. Sampling without
+        # sorting keeps the checklist order varying between captions too.
+        idxs = rng.sample(range(len(groups)), n) if groups else []
         benefits = [rng.choice(groups[i]) for i in idxs]
 
         # industries list now shows most of the time rather than about half,
@@ -289,7 +295,15 @@ def main():
     ap.add_argument("--seed", type=int, default=None)
     args = ap.parse_args()
 
-    cfg = json.loads(Path(args.config).read_text())
+    try:
+        cfg = json.loads(Path(args.config).read_text())
+    except FileNotFoundError:
+        raise SystemExit(f"Config file not found: {args.config}")
+    except json.JSONDecodeError as e:
+        raise SystemExit(f"Config file '{args.config}' is not valid JSON: {e}")
+    missing = [k for k in ("country", "phone") if k not in cfg]
+    if missing:
+        raise SystemExit(f"Config is missing required field(s): {', '.join(missing)}")
     rng = random.Random(args.seed)
 
     short_used, long_used = set(), set()
@@ -302,6 +316,13 @@ def main():
         c = build_long_caption(cfg, rng, long_used)
         if c:
             longs.append(c)
+
+    if len(shorts) < args.short:
+        print(f"Warning: only generated {len(shorts)} of {args.short} requested short captions "
+              "(ran out of unique phrasing combinations).", file=sys.stderr)
+    if len(longs) < args.long:
+        print(f"Warning: only generated {len(longs)} of {args.long} requested long captions "
+              "(ran out of unique phrasing combinations).", file=sys.stderr)
 
     out_lines = ["# Captions\n"]
     out_lines.append("## Short captions\n")

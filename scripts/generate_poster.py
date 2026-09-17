@@ -42,18 +42,21 @@ TEMPLATE_FUNCS = {
 
 
 def resolve_photos(cfg, photos_dir):
-    """If photos-dir is given, treat photo fields as filenames inside it
-    (unless they're already absolute/existing paths)."""
+    """If photos-dir is given, treat photo fields as filenames inside it.
+    A resolved path that would land outside photos_dir (via '..' segments
+    or an absolute path) is rejected rather than opened, so a config file
+    can't be used to read files from outside the intended photo directory."""
     if not photos_dir:
         return cfg
     photos = cfg.get("photos", {})
+    photos_dir_real = os.path.realpath(photos_dir)
 
     def resolve(p):
         if not p:
             return p
-        if os.path.isabs(p) and os.path.exists(p):
-            return p
-        candidate = os.path.join(photos_dir, p)
+        candidate = os.path.realpath(os.path.join(photos_dir, p))
+        if os.path.commonpath([candidate, photos_dir_real]) != photos_dir_real:
+            return None
         return candidate if os.path.exists(candidate) else p
 
     if "hero" in photos:
@@ -79,8 +82,13 @@ def main():
                      help="Optional directory to resolve relative photo filenames against")
     args = ap.parse_args()
 
-    with open(args.config) as f:
-        cfg = json.load(f)
+    try:
+        with open(args.config) as f:
+            cfg = json.load(f)
+    except FileNotFoundError:
+        raise SystemExit(f"Config file not found: {args.config}")
+    except json.JSONDecodeError as e:
+        raise SystemExit(f"Config file '{args.config}' is not valid JSON: {e}")
 
     template = cfg.get("template", "bold_impact")
     if template not in TEMPLATE_FUNCS:

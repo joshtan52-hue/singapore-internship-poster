@@ -27,7 +27,14 @@ PALETTES = {
 
 
 def _pal(cfg):
-    return PALETTES[cfg.get("palette", "navy_gold")]
+    name = cfg.get("palette", "navy_gold")
+    if name not in PALETTES:
+        raise ValueError(f"Unknown palette '{name}'. Choose from: {list(PALETTES)}")
+    return PALETTES[name]
+
+
+def _checklist_colors(pal):
+    return [pal["primary"], pal["gold"], pal["primary_dark"], pal["navy"]]
 
 
 def _dark_bg_border(pal, dark):
@@ -60,7 +67,7 @@ def _feature_row(img, xy, w, icon_name, title, subtitle, pal, icon_bg=None, titl
     _icon_badge(img, (x + 28, y + 28), 56, icon_bg, icon_name, 26)
     tf = pe.font("poppins-bold", title_size)
     sf = pe.font("lato-regular", sub_size)
-    d.text((x + 72, y + 4), title, font=tf, fill=pal["text"])
+    pe.draw_multiline(d, (x + 72, y + 4), title, tf, w - 72, pal["text"])
     if subtitle:
         pe.draw_multiline(d, (x + 72, y + 4 + title_size + 6), subtitle, sf, w - 72, (110, 110, 118))
     return y + 68
@@ -69,6 +76,8 @@ def _feature_row(img, xy, w, icon_name, title, subtitle, pal, icon_bg=None, titl
 def _headline(img, xy, lines_cfg, pal, max_width, base_size=64, font_name="poppins-bold", line_gap=6, align="left"):
     d = ImageDraw.Draw(img)
     x, y = xy
+    if not lines_cfg:
+        return y
     size = base_size
     fnt = pe.font(font_name, size)
     # shrink to fit widest line
@@ -108,10 +117,13 @@ def _contact_bar(img, y0, h, cfg, pal, bg=None):
 # ---------------------------------------------------------------- TEMPLATE A
 def render_bold_impact(cfg, out_path):
     pal = _pal(cfg)
-    # Slightly smaller canvas, sized to A4 paper proportions (1:1.4142)
-    # instead of the shared 1080x1620 (1:1.5) canvas other templates use.
-    H = round(W * 297 / 210)
-    img = Image.new("RGB", (W, H), pal["bg"])
+    # Targets Instagram's 4:5 feed-post max (1080x1350): H is the normal
+    # bottom-bar-pinned height, canvas_h is scratch headroom in case an
+    # unusually long requirements/benefits list needs more room -- the
+    # final crop below only grows past H if content actually needs it.
+    H = 1330
+    canvas_h = H + 300
+    img = Image.new("RGB", (W, canvas_h), pal["bg"])
     d = ImageDraw.Draw(img)
 
     # top ribbon
@@ -160,31 +172,31 @@ def render_bold_impact(cfg, out_path):
     if cfg.get("badge_text"):
         y = max(y, by1 + 24)
 
-    # hero photo (trimmed a bit shorter than the standard-canvas version so
-    # everything still fits comfortably on the shorter A4-ratio canvas)
-    photo_h = 330
+    # hero photo (trimmed shorter than the standard-canvas version so
+    # everything still fits comfortably within the 1350px-tall canvas)
+    photo_h = 260
     hero = pe.load_photo(cfg.get("photos", {}).get("hero"), (W - 2 * PAD, photo_h), "HERO PHOTO", 0)
     photo = pe.rounded_photo(hero, (W - 2 * PAD, photo_h), 24)
     img.paste(photo, (PAD, y), photo)
-    y += photo_h + 26
+    y += photo_h + 20
 
     # feature icon row (up to 4 short benefits)
     feats = cfg.get("benefits", [])[:4]
     ficons = cfg.get("benefits_icons", ["check", "briefcase", "dollar", "globe"])
     col_w = (W - 2 * PAD) // 2
-    row_h = 88
+    row_h = 74
     for i, feat in enumerate(feats):
         cx = PAD + (i % 2) * col_w
         cy = y + (i // 2) * row_h
         icon = ficons[i] if i < len(ficons) else "check"
         _feature_row(img, (cx, cy), col_w - 20, icon, feat, "", pal, icon_bg=pal["primary"])
-    y += row_h * ((len(feats) + 1) // 2) + 14
+    y += row_h * ((len(feats) + 1) // 2) + 10
 
     # two-column info boxes (order swaps when mirrored)
     box_w = (W - 2 * PAD - 30) // 2
     row_line_h = 44
-    box_h = row_line_h * max(len(cfg.get("requirements", [])), len(cfg.get("benefits_extra", cfg.get("requirements", [])))) + 84
-    box_h = max(box_h, 300)
+    box_h = row_line_h * max(len(cfg.get("requirements", [])), len(cfg.get("benefits_extra", cfg.get("benefits", [])))) + 84
+    box_h = max(box_h, 260)
 
     def _req_box(x0):
         d.rounded_rectangle([x0, y, x0 + box_w, y + box_h], radius=14, outline=pal["primary"], width=3)
@@ -195,8 +207,8 @@ def render_bold_impact(cfg, out_path):
         for i, req in enumerate(cfg.get("requirements", [])):
             icon = req_icons[i] if i < len(req_icons) else "check"
             _icon_badge(img, (x0 + 40, ry + 18), 40, pal["gold"], icon, 18, icon_color=pal["navy"])
-            d.text((x0 + 72, ry + 4), req, font=pe.font("lato-bold", 20), fill=pal["text"])
-            ry += row_line_h
+            text_bottom = pe.draw_multiline(d, (x0 + 72, ry + 4), req, pe.font("lato-bold", 20), box_w - 92, pal["text"])
+            ry = max(ry + row_line_h, text_bottom + 8)
 
     def _incl_box(x0):
         d.rounded_rectangle([x0, y, x0 + box_w, y + box_h], radius=14, outline=pal["primary"], width=3)
@@ -208,8 +220,8 @@ def render_bold_impact(cfg, out_path):
         for i, b in enumerate(incl):
             icon = incl_icons[i] if i < len(incl_icons) else "check"
             _icon_badge(img, (x0 + 40, ry + 18), 40, pal["gold"], icon, 18, icon_color=pal["navy"])
-            d.text((x0 + 72, ry + 4), b, font=pe.font("lato-bold", 20), fill=pal["text"])
-            ry += row_line_h
+            text_bottom = pe.draw_multiline(d, (x0 + 72, ry + 4), b, pe.font("lato-bold", 20), box_w - 92, pal["text"])
+            ry = max(ry + row_line_h, text_bottom + 8)
 
     x2 = PAD + box_w + 30
     if mirror:
@@ -218,13 +230,14 @@ def render_bold_impact(cfg, out_path):
     else:
         _req_box(PAD)
         _incl_box(x2)
-    y += box_h + 22
+    y += box_h + 16
 
     # bottom contact bar (fixed height, bottom-aligned)
-    bar_h = 150
-    y_bar = max(y + 20, H - bar_h)
-    _contact_bar(img, y_bar, H - y_bar, cfg, pal, bg=pal["primary"])
+    bar_h = 110
+    y_bar = max(y + 14, H - bar_h)
+    _contact_bar(img, y_bar, bar_h, cfg, pal, bg=pal["primary"])
 
+    img = img.crop((0, 0, W, min(canvas_h, y_bar + bar_h)))
     img.save(out_path)
     return out_path
 
@@ -257,7 +270,7 @@ def render_clean_split(cfg, out_path):
         d.rounded_rectangle([bx0, by0, bx0 + bw, by0 + bh], radius=14, fill=accent_fill)
         pe.draw_multiline(d, (bx0 + 16, by0 + 18), cfg["badge_text"], pe.font("poppins-bold", 20),
                            bw - 32, pal["gold"], align="center")
-    y += 70
+    y += 56
 
     y = _headline(img, (PAD, y), cfg["headline_lines"], headline_pal, W - 2 * PAD, base_size=66)
     y += 6
@@ -300,8 +313,8 @@ def render_clean_split(cfg, out_path):
         for i, item in enumerate(items):
             ic = icons[i] if i < len(icons) else "check"
             _icon_badge(img, (x0 + 40, iy + 15), 32, accent_fill, ic, 14)
-            pe.draw_multiline(d, (x0 + 64, iy + 4), item, pe.font("lato-semibold", 17), box_w - 84, text_color)
-            iy += 42
+            text_bottom = pe.draw_multiline(d, (x0 + 64, iy + 4), item, pe.font("lato-semibold", 17), box_w - 84, text_color)
+            iy = max(iy + 42, text_bottom + 12)
 
     if mirror:
         info_box(PAD, "BENEFITS", bens, ben_icons)
@@ -434,7 +447,8 @@ def render_elegant_pills(cfg, out_path):
 # ---------------------------------------------------------------- TEMPLATE D
 def render_torn_paper(cfg, out_path):
     pal = _pal(cfg)
-    img = Image.new("RGB", (W, H), (255, 255, 255))
+    canvas_h = H + 200
+    img = Image.new("RGB", (W, canvas_h), pal["bg"])
     d = ImageDraw.Draw(img)
 
     # hero photo with torn bottom edge
@@ -541,7 +555,7 @@ def render_torn_paper(cfg, out_path):
     pe.chevrons(d, (W - 60, contact_y + 22), 4, 13, 22, pal["navy"], direction="left", width=6)
 
     content_bottom = contact_y + 70
-    img = img.crop((0, 0, W, min(H, content_bottom + 20)))
+    img = img.crop((0, 0, W, min(canvas_h, content_bottom + 20)))
     img.save(out_path)
     return out_path
 
@@ -569,7 +583,8 @@ def render_photo_overlay(cfg, out_path):
     anchor_y = cfg.get("photos", {}).get("hero_anchor_y", 0.5)
     photo = pe.cover_resize(hero, W, photo_h, anchor_y=anchor_y)
 
-    img = Image.new("RGB", (W, H), pal["primary_dark"])
+    canvas_h = H + 200
+    img = Image.new("RGB", (W, canvas_h), pal["primary_dark"])
     img.paste(photo, (0, 0))
     d = ImageDraw.Draw(img)
     d.rectangle([0, photo_h, W, photo_h + 6], fill=pal["gold"])  # seam accent, not on the photo
@@ -631,7 +646,7 @@ def render_photo_overlay(cfg, out_path):
         cx += 58 + d.textlength(c["text"], font=pe.font("poppins-bold", 32)) + 46
     y += 90
 
-    img = img.crop((0, 0, W, min(H, y)))
+    img = img.crop((0, 0, W, min(canvas_h, y)))
     img.save(out_path)
     return out_path
 
@@ -774,7 +789,7 @@ def render_gradient_highlights(cfg, out_path):
     # headline (forced white regardless of per-line color, for legibility on gradient)
     headline_w = int((W - 2 * PAD) * 0.62)
     fnt_h = pe.font("poppins-bold", 66)
-    widest = max(d.textlength(l["text"], font=fnt_h) for l in cfg["headline_lines"])
+    widest = max((d.textlength(l["text"], font=fnt_h) for l in cfg["headline_lines"]), default=0)
     size = 66
     while widest > headline_w and size > 28:
         size -= 2
@@ -933,11 +948,11 @@ def render_night_glow(cfg, out_path):
     d = ImageDraw.Draw(img)
 
     mirror = cfg.get("mirror", False)
-    y = PAD
+    y = PAD - 20
 
     fnt_h = pe.font("poppins-bold", 84)
     max_w = W - 2 * PAD
-    widest = max(d.textlength(l["text"], font=fnt_h) for l in cfg["headline_lines"])
+    widest = max((d.textlength(l["text"], font=fnt_h) for l in cfg["headline_lines"]), default=0)
     size = 84
     while widest > max_w and size > 34:
         size -= 2
@@ -947,7 +962,6 @@ def render_night_glow(cfg, out_path):
     for l in cfg["headline_lines"]:
         d.text((PAD, y), l["text"], font=fnt_h, fill=(255, 255, 255))
         y += asc + desc + 2
-    y += 8
 
     # subtitle + outlined brand pill, inline
     subtitle = cfg.get("subtitle", "")
@@ -1071,19 +1085,18 @@ def render_night_glow(cfg, out_path):
 
 # --------------------------------------------------------- shared helpers for
 # the 4 "ticket/stamp" style templates added from Josh's reference designs
-_CHECK_COLORS = [(200, 16, 46), (197, 157, 54), (11, 43, 74), (44, 140, 90)]
-
-
-def _numbered_checklist(img, xy, w, items, colored=True, numbered=False, font_size=25,
+def _numbered_checklist(img, xy, w, items, pal, colored=True, numbered=False, font_size=25,
                          circle_d=40, row_gap=54, cols=2, col_gap=40, text_color=(20, 32, 46)):
     """A grid (default 2-col) of check/number-badge + label rows, cycling
-    through _CHECK_COLORS so each item's badge is a different accent color
-    (matches the multicolor checklist look in the reference designs). Row
+    through the active palette's accent colors so each item's badge is a
+    different color (matches the multicolor checklist look in the reference
+    designs) without breaking when a non-default palette is chosen. Row
     height is computed per-row from how many lines each item's text actually
     wraps to (checked *before* drawing), so a long label never overlaps the
     row below it."""
     d = ImageDraw.Draw(img)
     x0, y0 = xy
+    check_colors = _checklist_colors(pal)
     col_w = (w - col_gap * (cols - 1)) // cols
     fnt = pe.font("poppins-medium" if not numbered else "lato-bold", font_size)
     text_w = col_w - circle_d - 16
@@ -1098,7 +1111,7 @@ def _numbered_checklist(img, xy, w, items, colored=True, numbered=False, font_si
         for c, item in enumerate(row_items):
             i = row * cols + c
             cx = x0 + c * (col_w + col_gap)
-            color = _CHECK_COLORS[i % len(_CHECK_COLORS)] if colored else _CHECK_COLORS[0]
+            color = check_colors[i % len(check_colors)] if colored else check_colors[0]
             r = circle_d / 2
             badge_cy = cy + row_h / 2
             d.ellipse([cx, badge_cy - r, cx + circle_d, badge_cy + r], fill=color)
@@ -1186,11 +1199,11 @@ def render_stamp_collage(cfg, out_path):
     img = pe.diagonal_stripes((W, canvas_h), bg, stripe_c, stripe_w=30, gap=60)
     d = ImageDraw.Draw(img)
 
-    y = 40
+    y = 18
     if cfg.get("ribbon_text"):
         pe.ribbon_banner(img, (-20, y - 10), cfg["ribbon_text"], pal["primary"], (255, 255, 255),
                           pe.font("poppins-bold", 24), angle=-4)
-    y += 90
+    y += 72
 
     y = _headline(img, (PAD, y), cfg["headline_lines"], pal_text, W - 2 * PAD, base_size=68,
                   font_name="poppins-bold", line_gap=4, align="center")
@@ -1202,25 +1215,25 @@ def render_stamp_collage(cfg, out_path):
         bw = tw + 60
         d.rounded_rectangle([W / 2 - bw / 2, y, W / 2 + bw / 2, y + 62], radius=31, fill=pal["gold"])
         d.text((W / 2 - tw / 2, y + 14), cfg["duration_text"], font=fnt_dur, fill=pal["primary_dark"])
-        y += 90
+        y += 74
 
     # main gallery panel (cream card behind the stamp grid)
     panel_x0, panel_y0 = PAD - 20, y
     panel_w = W - 2 * (PAD - 20)
     gallery = cfg.get("photos", {}).get("gallery", [])[:6]
     cols, rows = 3, 2
-    g_gap = 24
+    g_gap = 18
     stamp_w = (panel_w - 60 - g_gap * (cols - 1)) // cols
-    stamp_photo_h = int(stamp_w * 0.78)
-    label_h = 46
+    stamp_photo_h = int(stamp_w * 0.56)
+    label_h = 38
     stamp_h = stamp_photo_h + label_h
-    panel_h = 40 + rows * stamp_h + (rows - 1) * g_gap + 40
+    panel_h = 26 + rows * stamp_h + (rows - 1) * g_gap + 26
     d.rounded_rectangle([panel_x0, panel_y0, panel_x0 + panel_w, panel_y0 + panel_h],
                          radius=20, fill=(250, 248, 242), outline=pal["gold"], width=3)
 
-    fnt_label = pe.font("poppins-bold", 20)
+    fnt_label = pe.font("poppins-bold", 18)
     gx0 = panel_x0 + 30
-    gy0 = panel_y0 + 40
+    gy0 = panel_y0 + 26
     for i in range(6):
         col, row = i % cols, i // cols
         gx = gx0 + col * (stamp_w + g_gap)
@@ -1236,7 +1249,7 @@ def render_stamp_collage(cfg, out_path):
                                font_obj=fnt_label,
                                label_color=pal["primary_dark"])
         img.paste(card, (gx, gy))
-    y = panel_y0 + panel_h + 20
+    y = panel_y0 + panel_h + 14
 
     # starburst 'no fees' sticker overlapping the panel's top-left corner
     if cfg.get("badge_text"):
@@ -1257,7 +1270,7 @@ def render_stamp_collage(cfg, out_path):
         _stamp_badge(img, (cx, cy), stamp_d, cfg["stamp_text"], ("poppins-bold", 23),
                      (250, 248, 242), fill=pal["primary"])
 
-    y += 30
+    y += 20
     if cfg.get("benefits_heading"):
         fnt_bh = pe.font("poppins-bold", 26)
         tw = d.textlength(cfg["benefits_heading"], font=fnt_bh)
@@ -1266,33 +1279,33 @@ def render_stamp_collage(cfg, out_path):
         fnt_ic = pe.font("icons", 20)
         d.text((W / 2 - bw / 2 + 24, y + 16), pe.icon_char("plane"), font=fnt_ic, fill=pal["primary_dark"])
         d.text((W / 2 - tw / 2 + 14, y + 15), cfg["benefits_heading"], font=fnt_bh, fill=pal["primary_dark"])
-        y += 84
+        y += 68
 
     bens = cfg.get("benefits", [])[:4]
-    y = _numbered_checklist(img, (PAD, y), W - 2 * PAD, bens, colored=True, numbered=False,
+    y = _numbered_checklist(img, (PAD, y), W - 2 * PAD, bens, pal, colored=True, numbered=False,
                              font_size=25, row_gap=54, text_color=(255, 255, 255))
-    y += 30
+    y += 20
 
     if cfg.get("footer_banner_text"):
-        d.rectangle([0, y, W, y + 66], fill=pal["primary"])
+        d.rectangle([0, y, W, y + 56], fill=pal["primary"])
         fnt_fb = pe.font("poppins-bold", 24)
         tw = d.textlength(cfg["footer_banner_text"], font=fnt_fb)
-        d.text((W / 2 - tw / 2, y + 18), cfg["footer_banner_text"], font=fnt_fb, fill=(255, 255, 255))
-        y += 66
+        d.text((W / 2 - tw / 2, y + 13), cfg["footer_banner_text"], font=fnt_fb, fill=(255, 255, 255))
+        y += 56
 
     contacts = cfg.get("contact_lines", [])
     if contacts:
-        bar_h = 110
+        bar_h = 96
         d.rectangle([0, y, W, y + bar_h], fill=pal["primary_dark"])
         cta = cfg.get("cta", "CONTACT US TODAY!")
         fnt_cta = pe.font("poppins-bold", 28)
         tw = d.textlength(cta, font=fnt_cta)
-        d.rounded_rectangle([PAD, y + 25, PAD + tw + 50, y + 85], radius=10, fill=pal["primary"])
-        d.text((PAD + 25, y + 40), cta, font=fnt_cta, fill=(255, 255, 255))
+        d.rounded_rectangle([PAD, y + 18, PAD + tw + 50, y + 78], radius=10, fill=pal["primary"])
+        d.text((PAD + 25, y + 33), cta, font=fnt_cta, fill=(255, 255, 255))
         cx = PAD + tw + 100
         for c in contacts:
-            _icon_badge(img, (cx + 28, y + 55), 56, (37, 211, 102), c.get("icon", "whatsapp"), 26)
-            d.text((cx + 66, y + 38), c["text"], font=pe.font("poppins-bold", 28), fill=(255, 255, 255))
+            _icon_badge(img, (cx + 28, y + 48), 56, (37, 211, 102), c.get("icon", "whatsapp"), 26)
+            d.text((cx + 66, y + 31), c["text"], font=pe.font("poppins-bold", 28), fill=(255, 255, 255))
             cx += 66 + d.textlength(c["text"], font=pe.font("poppins-bold", 28)) + 40
         y += bar_h
 
@@ -1327,8 +1340,8 @@ def render_magazine_split(cfg, out_path):
     d.rectangle([30, 30, W - 30, H + 300 - 30], outline=frame_color, width=1)
 
     # masthead
-    mast_y0 = 46
-    mast_h = 100
+    mast_y0 = 40
+    mast_h = 86
     d.rectangle([46, mast_y0, W - 46, mast_y0 + mast_h], fill=mast_fill)
     title = cfg.get("masthead_title", "THE SINGAPORE OPPORTUNITY")
     fnt_mast = pe.font("poppins-bold", 30)
@@ -1354,7 +1367,7 @@ def render_magazine_split(cfg, out_path):
               fill=(200, 16, 46))
     for sx, sy in [(23, -3), (28, 1), (26, 6), (20, 6), (18, 1)]:
         d.ellipse([fx + sx, moon_cy + sy - 1, fx + sx + 2, moon_cy + sy + 1], fill=(255, 255, 255))
-    y = mast_y0 + mast_h + 30
+    y = mast_y0 + mast_h + 24
 
     y = _headline(img, (60, y), cfg["headline_lines"], headline_pal, W - 120, base_size=66,
                   font_name="poppins-bold", line_gap=2)
@@ -1364,14 +1377,14 @@ def render_magazine_split(cfg, out_path):
         bw = tw + 40
         d.rounded_rectangle([60, y + 4, 60 + bw, y + 4 + 46], radius=23, fill=pal["gold"])
         d.text((60 + 20, y + 16), cfg["duration_text"], font=fnt_dur, fill=pal["primary_dark"])
-    y += 70
+    y += 58
 
     # left large photo / right small photo + checklist
     left_w = int((W - 120 - 30) * 0.58)
     right_x = 60 + left_w + 30
     right_w = (W - 60) - right_x
     row_top = y
-    left_h = 420
+    left_h = 350
     hero = pe.load_photo(cfg.get("photos", {}).get("hero"), (left_w, left_h), "PHOTO", 0)
     d.rectangle([60 - 4, row_top - 4, 60 + left_w + 4, row_top + left_h + 4], outline=frame_color, width=3)
     img.paste(pe.cover_resize(hero, left_w, left_h), (60, row_top))
@@ -1379,14 +1392,14 @@ def render_magazine_split(cfg, out_path):
         fnt_cap = pe.font("lato-regular", 18)
         d.text((60, row_top + left_h + 8), cfg["hero_caption"], font=fnt_cap, fill=cap_color)
 
-    small_h = 190
+    small_h = 150
     sec = cfg.get("photos", {}).get("secondary", [None])
     hero2 = pe.load_photo(sec[0] if sec else None, (right_w, small_h), "PHOTO", 1)
     d.rectangle([right_x - 3, row_top - 3, right_x + right_w + 3, row_top + small_h + 3],
                 outline=frame_color, width=2)
     img.paste(pe.cover_resize(hero2, right_w, small_h), (right_x, row_top))
 
-    cy = row_top + small_h + 24
+    cy = row_top + small_h + 18
     if cfg.get("benefits_heading"):
         fnt_bh = pe.font("poppins-bold", 22)
         tw = d.textlength(cfg["benefits_heading"], font=fnt_bh)
@@ -1395,15 +1408,16 @@ def render_magazine_split(cfg, out_path):
         fnt_ic = pe.font("icons", 18)
         d.text((right_x + 18, cy + 13), pe.icon_char("star"), font=fnt_ic, fill=(255, 255, 255))
         d.text((right_x + 44, cy + 12), cfg["benefits_heading"], font=fnt_bh, fill=(255, 255, 255))
-        cy += 62
+        cy += 54
     bens = cfg.get("benefits", [])[:4]
     ben_icons = cfg.get("benefits_icons", ["check"] * len(bens))
+    check_colors = _checklist_colors(pal)
     for i, b in enumerate(bens):
         icon = ben_icons[i] if i < len(ben_icons) else "check"
-        color = _CHECK_COLORS[i % len(_CHECK_COLORS)]
-        _icon_badge(img, (right_x + 17, cy + 17), 34, color, icon, 16)
-        d.text((right_x + 42, cy + 5), b, font=pe.font("poppins-bold", 19), fill=text_color)
-        cy += 44
+        color = check_colors[i % len(check_colors)]
+        _icon_badge(img, (right_x + 17, cy + 15), 30, color, icon, 14)
+        d.text((right_x + 42, cy + 4), b, font=pe.font("poppins-bold", 19), fill=text_color)
+        cy += 38
 
     y = max(row_top + left_h + 40, cy + 20)
 
@@ -1412,7 +1426,7 @@ def render_magazine_split(cfg, out_path):
     gcols = 3
     ggap = 24
     gw = (W - 120 - ggap * (gcols - 1)) // gcols
-    gh = 200
+    gh = 170
     any_label = any((gallery[i] if i < len(gallery) else {}).get("label") for i in range(3))
     lbl_h = 46 if any_label else 0
     photo_h_eff = gh + (0 if any_label else 46)
@@ -1432,7 +1446,7 @@ def render_magazine_split(cfg, out_path):
                 lw = d.textlength(ln, font=fnt_lbl)
                 d.text((gx + gw / 2 - lw / 2, ly), ln, font=fnt_lbl, fill=pal["gold"])
                 ly += 20
-    y += photo_h_eff + 30
+    y += photo_h_eff + (lbl_h if any_label else 0) + 30
 
     # outlined 'limited slots' box with round apply stamp
     box_h = 130
@@ -1503,7 +1517,7 @@ def render_luggage_tag(cfg, out_path):
     if cfg.get("benefits_heading"):
         my += 66
     bens = cfg.get("benefits", [])[:4]
-    my = _numbered_checklist(scratch, (inner_x, my), inner_w, bens, colored=True, numbered=True,
+    my = _numbered_checklist(scratch, (inner_x, my), inner_w, bens, pal, colored=True, numbered=True,
                               font_size=22, circle_d=36)
     content_bottom = my + 50  # bottom padding inside the card
     if cfg.get("stamp_text"):
@@ -1585,7 +1599,7 @@ def render_luggage_tag(cfg, out_path):
         d.text((inner_x + 42, y + 13), cfg["benefits_heading"], font=fnt_bh, fill=(255, 255, 255))
         y += 66
 
-    y = _numbered_checklist(img, (inner_x, y), inner_w, bens, colored=True, numbered=True,
+    y = _numbered_checklist(img, (inner_x, y), inner_w, bens, pal, colored=True, numbered=True,
                              font_size=22, circle_d=36)
 
     if cfg.get("stamp_text"):
@@ -1635,7 +1649,7 @@ def render_certificate_award(cfg, out_path):
     Recommended palette: `navy_gold` or `burgundy_cream`."""
     pal = _pal(cfg)
     canvas_h = H + 200
-    img = Image.new("RGB", (W, canvas_h), (252, 249, 240))
+    img = Image.new("RGB", (W, canvas_h), pal["bg"])
     d = ImageDraw.Draw(img)
 
     fm = 26
@@ -1683,7 +1697,7 @@ def render_certificate_award(cfg, out_path):
         bsize = 22
         fnt_star = pe.font("poppins-bold", bsize)
         words = cfg["badge_text"].split()
-        widest = max(d.textlength(wd, font=fnt_star) for wd in words)
+        widest = max((d.textlength(wd, font=fnt_star) for wd in words), default=0)
         while widest > safe_w and bsize > 13:
             bsize -= 1
             fnt_star = pe.font("poppins-bold", bsize)
@@ -1742,7 +1756,7 @@ def render_certificate_award(cfg, out_path):
         y += 74
 
     bens = cfg.get("benefits", [])[:4]
-    y = _numbered_checklist(img, (gx0, y), W - 2 * gx0, bens, colored=True, numbered=True,
+    y = _numbered_checklist(img, (gx0, y), W - 2 * gx0, bens, pal, colored=True, numbered=True,
                              font_size=27, circle_d=44, row_gap=58)
     y += 20
 
@@ -1765,7 +1779,7 @@ def render_certificate_award(cfg, out_path):
             iw = 48 if c.get("icon") else 0
             specs.append((c, fnt_c, tw, iw))
             total_w += tw + iw + 40
-        cx = W / 2 - total_w / 2
+        cx = max(gx0, W / 2 - total_w / 2)
         for c, fnt_c, tw, iw in specs:
             if c.get("icon"):
                 _icon_badge(img, (cx + 20, y + 20), 40, (37, 211, 102), c["icon"], 18)
@@ -1776,7 +1790,6 @@ def render_certificate_award(cfg, out_path):
 
     img = img.crop((0, 0, W, min(canvas_h, y + 40)))
     img.save(out_path)
-    return out_path
     return out_path
 
 
@@ -2183,8 +2196,9 @@ def render_boarding_pass(cfg, out_path):
     -- then a closing line + contact row below the card on the surface
     color. Structurally different from the other card/split templates:
     built around an airline-boarding-pass metaphor ("your ticket to
-    Singapore") rather than a headline+benefits+CTA stack. Sized to
-    1080x1620. Needs `photos.hero`. Does not support `mirror`."""
+    Singapore") rather than a headline+benefits+CTA stack. Cropped to its
+    actual content height (typically well under Instagram's 1350px feed-post
+    limit). Needs `photos.hero`. Does not support `mirror`."""
     pal = _pal(cfg)
     w = W
     surface = pal["primary_dark"]
@@ -2361,22 +2375,27 @@ def render_boarding_pass(cfg, out_path):
 # ---------------------------------------------------------------- TEMPLATE R
 def render_movie_poster(cfg, out_path):
     """A cinematic 'blockbuster movie poster' full-bleed layout: the hero
-    photo fills the entire 1080x1620 canvas with a dark gradient rising from
-    the bottom (and a light one at the very top) for text legibility, a
-    small tracked "presents" line, a huge centered movie-title-style
-    headline, a one-line tagline/logline, a "STARRING: YOU" credit line, a
-    small bordered rating badge (doubles as the age-requirement line), a
-    tiny tracked movie-credits line listing the program benefits, and a
-    solid-color release bar at the very bottom with a CTA + contact row.
-    Structurally different from every card/ticket template in this skill --
-    no white card or panel at all, just type set directly over a full-bleed
-    photo, like an actual film poster. Needs `photos.hero` -- pick a
-    dramatic, high-contrast portrait-leaning photo (skyline, dusk, a single
-    strong subject) since the entire canvas is the photo; check retention
-    with `check_crop.py` at 1080x1620 before picking. Does not support
-    `mirror` or `dark_mode` (already full-bleed dark by design)."""
+    photo fills the entire 1080x1350 canvas (Instagram 4:5 feed post) with a
+    dark gradient rising from the bottom (and a light one at the very top)
+    for text legibility, a small tracked "presents" line, a huge centered
+    movie-title-style headline, a one-line tagline/logline, a "STARRING: YOU"
+    credit line, a small bordered rating badge (doubles as the
+    age-requirement line), a tiny tracked movie-credits line listing the
+    program benefits, and a solid-color release bar at the very bottom with
+    a CTA + contact row. Structurally different from every card/ticket
+    template in this skill -- no white card or panel at all, just type set
+    directly over a full-bleed photo, like an actual film poster. Needs
+    `photos.hero` -- pick a dramatic, high-contrast portrait-leaning photo
+    (skyline, dusk, a single strong subject) since the entire canvas is the
+    photo; check retention with `check_crop.py` at 1080x1350 before picking.
+    Does not support `mirror` or `dark_mode` (already full-bleed dark by
+    design)."""
     pal = _pal(cfg)
-    w, h = W, H
+    # Fixed at 1080x1350 (Instagram's max feed-post portrait ratio, 4:5) --
+    # full-bleed, so shrinking the canvas just crops the photo differently
+    # (the normal cover-resize crop the user already picks a photo for via
+    # check_crop.py), not a loss of any text/content element.
+    w, h = W, 1350
     hero = pe.load_photo(cfg.get("photos", {}).get("hero"), (w, h), "HERO PHOTO", 0)
     photo = pe.cover_resize(hero, w, h)
     img = photo.convert("RGBA")
@@ -2478,8 +2497,9 @@ def render_postcard(cfg, out_path):
     have enough default content to balance the visual weight of the photo
     above them, so the bottom half doesn't read as empty. A different
     object-metaphor from every other template -- it's meant to read as an
-    actual postcard, not a card/ticket/panel. Needs `photos.hero` sized for
-    a ~1020x980 area -- check `check_crop.py` first. Does not support
+    actual postcard, not a card/ticket/panel. Cropped to its actual content
+    height, comfortably within Instagram's 1350px feed-post limit. Needs
+    `photos.hero` sized for a ~1020x820 area -- check `check_crop.py` first. Does not support
     `mirror` or `dark_mode`."""
     pal = _pal(cfg)
     w, h = W, H
@@ -2488,17 +2508,18 @@ def render_postcard(cfg, out_path):
 
     border = 30
     photo_x0, photo_y0 = border, border
-    photo_x1, photo_y1 = w - border, 1010
+    photo_x1, photo_y1 = w - border, 850
     photo_w, photo_h = photo_x1 - photo_x0, photo_y1 - photo_y0
     hero = pe.load_photo(cfg.get("photos", {}).get("hero"), (photo_w, photo_h), "HERO PHOTO", 0)
-    img.paste(pe.cover_resize(hero, photo_w, photo_h), (photo_x0, photo_y0))
+    hero_displayed = pe.cover_resize(hero, photo_w, photo_h)
+    img.paste(hero_displayed, (photo_x0, photo_y0))
 
     # postage stamp, top-right corner of the photo, with a perforated edge
     stamp_w, stamp_h = 130, 170
     sx0, sy0 = photo_x1 - 40 - stamp_w, photo_y0 + 30
     sx1, sy1 = sx0 + stamp_w, sy0 + stamp_h
     local_box = (sx0 - photo_x0, sy0 - photo_y0, sx1 - photo_x0, sy1 - photo_y0)
-    edge_color = hero.crop(local_box).resize((1, 1)).getpixel((0, 0))
+    edge_color = hero_displayed.crop(local_box).resize((1, 1)).getpixel((0, 0))
     d.rectangle([sx0, sy0, sx1, sy1], fill=(255, 255, 255))
     notch_r = 7
     nx = sx0
@@ -2545,10 +2566,11 @@ def render_postcard(cfg, out_path):
               photo_w - 60, base_size=54, font_name="poppins-bold", line_gap=2, align="center")
 
     # back-of-postcard area: a thin vertical divider splits a note column
-    # from an address-style benefits column
+    # from an address-style benefits column. The divider/closer position
+    # depends on how tall each column's content turns out to be, so it's
+    # drawn after both columns below rather than to a fixed canvas height.
     top = photo_y1 + 34
     mid_x = w // 2
-    d.line([(mid_x, top), (mid_x, h - 50)], fill=(210, 210, 214), width=2)
 
     left_x0, left_w = border + 14, mid_x - border - 34
     note_heading = cfg.get("note_heading", "A quick note...")
@@ -2606,11 +2628,16 @@ def render_postcard(cfg, out_path):
         d.text((right_x0 + 34, ry), c["text"], font=pe.font("poppins-bold", 20), fill=pal["primary_dark"])
         ry += 38
 
+    content_bottom = max(ly, ry)
+    d.line([(mid_x, top), (mid_x, content_bottom + 14)], fill=(210, 210, 214), width=2)
+
     closer = cfg.get("closer_text", "SEND THIS TO YOURSELF — YOUR FUTURE IS WAITING")
     fnt_close = pe.font("lato-bold", 14)
     tw = d.textlength(closer, font=fnt_close)
-    d.text((w / 2 - tw / 2, h - 40), closer, font=fnt_close, fill=(160, 160, 166))
+    closer_y = content_bottom + 40
+    d.text((w / 2 - tw / 2, closer_y), closer, font=fnt_close, fill=(160, 160, 166))
 
+    img = img.crop((0, 0, w, min(h, closer_y + 30)))
     img.save(out_path)
     return out_path
 
@@ -2629,8 +2656,9 @@ def render_chat_mockup(cfg, out_path):
     a real conversation, not an ad). Needs `photos.hero` for the avatar
     (a small circular crop, so any reasonably centered photo works) and
     optionally `photos.secondary[0]` if a message has `"photo": true`.
-    Sized to a max of 1080x1620, cropped to its actual content height (the
-    bubble list is dynamic). Does not support `mirror` or `dark_mode`."""
+    Cropped to its actual content height (the bubble list is dynamic),
+    typically well under Instagram's 1350px feed-post limit. Does not
+    support `mirror` or `dark_mode`."""
     pal = _pal(cfg)
     w = W
     bg = (236, 229, 221)

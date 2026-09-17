@@ -56,8 +56,13 @@ _font_cache = {}
 def font(name, size):
     key = (name, size)
     if key not in _font_cache:
+        if name not in FONT_FILES:
+            raise ValueError(f"Unknown font name '{name}'. Choose from: {list(FONT_FILES)}")
         path = os.path.join(FONT_DIR, FONT_FILES[name])
-        _font_cache[key] = ImageFont.truetype(path, size)
+        try:
+            _font_cache[key] = ImageFont.truetype(path, size)
+        except OSError as e:
+            raise OSError(f"Could not load font '{name}' from {path}: {e}") from e
     return _font_cache[key]
 
 
@@ -461,11 +466,18 @@ def chip(draw, img, xy, text, icon_name, pal, fill=None, text_color=None, font_s
     tw = draw.textlength(text, font=fnt)
     h = font_size + 26
     w = pad_x + icon_size + 10 + tw + pad_x
-    d2 = ImageDraw.Draw(img, "RGBA") if img.mode == "RGBA" else draw
-    d2.rounded_rectangle([x, y, x + w, y + h], radius=h / 2, fill=fill)
+    # Draw onto a dedicated RGBA layer and composite it in, rather than
+    # drawing straight onto `img` -- `img` is usually RGB, and Pillow
+    # silently drops the alpha byte of `fill` when you draw RGBA colors
+    # directly onto an RGB image (the pill comes out fully opaque instead
+    # of translucent).
+    layer = Image.new("RGBA", (int(math.ceil(w)), int(math.ceil(h))), (0, 0, 0, 0))
+    d2 = ImageDraw.Draw(layer)
+    d2.rounded_rectangle([0, 0, w, h], radius=h / 2, fill=fill)
     fnt_ic = font("icons", icon_size + 2)
-    d2.text((x + pad_x, y + h / 2 - (icon_size + 2) / 2 - 1), icon_char(icon_name), font=fnt_ic, fill=text_color)
-    d2.text((x + pad_x + icon_size + 10, y + h / 2 - font_size / 2 - 2), text, font=fnt, fill=text_color)
+    d2.text((pad_x, h / 2 - (icon_size + 2) / 2 - 1), icon_char(icon_name), font=fnt_ic, fill=text_color)
+    d2.text((pad_x + icon_size + 10, h / 2 - font_size / 2 - 2), text, font=fnt, fill=text_color)
+    img.paste(layer, (int(x), int(y)), layer)
     return w, h
 
 

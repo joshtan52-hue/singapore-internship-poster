@@ -138,13 +138,12 @@ runs anywhere this skill is installed.
    for every photo. If a render looks off once assembled, swap the palette
    and re-render before presenting rather than noting it and moving on.
 
-   **If Josh needs an Instagram feed post specifically**, use `neon_edge`, `flat_pop`, or
-   `dark_chevron` (1080x1350, Instagram's 4:5 feed-post size) or `studio_split` (1080x1080,
-   Instagram's square feed-post size) — these are the only templates sized to post
-   edge-to-edge with no cropping. `bold_impact` renders at 1080x1527 (A4,
-   for print). Every other template renders at 1080x1620, which is taller than Instagram's
-   feed cap and will get cropped or padded if posted there — fine for WhatsApp/Facebook/print,
-   but not the right pick when he specifically asks for an Instagram post.
+   **Every template now fits Instagram's feed-post limits with no cropping.** All 20
+   templates render at 1080 wide by at most 1350 tall (Instagram's 4:5 feed-post max) —
+   `studio_split` renders square at 1080x1080, and most others dynamically crop to their
+   actual (often shorter) content height instead of a fixed size. There's no longer a
+   subset to avoid for Instagram specifically; pick whichever template fits the message,
+   photo, and the variety guidance below.
 
    **No poster shall be repeated.** Never render two posters that share the same
    combination of template + palette + hero photo + headline copy — check what's
@@ -194,8 +193,8 @@ runs anywhere this skill is installed.
    ```bash
    python3 scripts/generate_poster.py --config <config.json> --out <poster.png> --photos-dir <photo folder>
    ```
-   This writes a 1080px-wide PNG (height varies per template, ~1350-1620px) ready to
-   post or print.
+   This writes a 1080px-wide PNG (height varies per template, ~750-1350px, all within
+   Instagram's feed-post limits) ready to post or print.
 
 6. **Always generate 1 short + 1 long caption to go with it.** This is not optional —
    every poster Josh approves should come with a matching caption pair, without him

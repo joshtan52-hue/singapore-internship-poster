@@ -10,10 +10,9 @@ tagline sit in a row right below the headline instead of above it, then the hero
 photo, a row of feature icons, two side-by-side info boxes ("PROGRAM REQUIREMENTS" /
 "WHAT'S INCLUDED"), finishing with a bold contact bar. Best for a punchy, sales-y
 flyer — lots of text density, good when you want to list courses/diplomas alongside
-requirements. Recommended palette: `red_navy`. Uses a slightly shorter canvas than
-the other templates, sized to A4 paper proportions (1080x1527, a 1:1.4142 ratio)
-rather than the shared 1080x1620 — this is the one template sized for printing on
-A4 rather than a social-media aspect ratio.
+requirements. Recommended palette: `red_navy`. Bottom-bar-pinned at up to 1080x1330
+(it'll grow a little taller only if an unusually long requirements/benefits list
+needs the room), comfortably within Instagram's 1350px feed-post limit.
 
 ## `clean_split` (modern corporate, navy + gold)
 Eyebrow pill + hexagon badge up top, three-line headline, optional discount pill, one
@@ -152,8 +151,8 @@ bottom-to-top up the left edge like a neon sign (`edge_text`), a small
 triangle "mountain mark" + `brand_name` top-right of the main column, one
 large photo, a solid-color stat panel (`duration_text` + `tagline`), a light
 closing-statement panel (`closing_text`), a row of up to 3 benefit chips, and
-a dark contact footer. Sized to 1080x1350 (Instagram 4:5 feed post) rather
-than the shared 1080x1620 canvas. Needs `photos.hero`. Recommended palette:
+a dark contact footer. Sized to 1080x1350 (Instagram 4:5 feed post). Needs
+`photos.hero`. Recommended palette:
 `teal_coral` or `red_navy`. Does not support `mirror`.
 
 ## `flat_pop` (vivid flat-color background, ringed stamp badge, sticker badge)
@@ -218,8 +217,9 @@ fees or whatever four fields you supply), a barcode graphic with
 and the `contact_lines` row. Reach for this one specifically when Josh says
 the posters feel repetitive or asks for something visually different --
 it doesn't share any layout DNA with the card/split/chevron templates.
-Sized to a max of 1080x1620, cropped to its actual content height (the
-ticket card doesn't stretch to fill the full canvas). Needs `photos.hero`
+Cropped to its actual content height (the ticket card doesn't stretch to
+fill the full canvas), typically well under Instagram's 1350px feed-post
+limit. Needs `photos.hero`
 sized for a wide ~2.4:1 strip (960x400) -- a photo with some travel/journey
 association (passport, luggage, airport, boarding) reinforces the ticket
 metaphor especially well, but any well-cropping photo works. Does not
@@ -229,7 +229,7 @@ the light-background templates).
 
 ## `movie_poster` (full-bleed cinematic film-poster look)
 No card, panel, or white space at all -- the hero photo fills the entire
-1080x1620 canvas edge to edge, with a dark gradient rising from the bottom
+1080x1350 canvas (Instagram 4:5 feed post) edge to edge, with a dark gradient rising from the bottom
 (and a light one at the very top) so type stays legible directly over the
 image, like an actual film poster. A small tracked `presents_text` line up
 top, a huge centered movie-title-style `headline_lines`, a one-line
@@ -243,7 +243,7 @@ repetitive -- it shares no layout DNA with any card/split/chevron template,
 since there's no card at all. Needs `photos.hero` -- since the whole canvas
 is the photo, pick something dramatic and high-contrast (a skyline at dusk,
 a single strong subject) rather than a busy group photo; check retention
-with `check_crop.py` at 1080x1620 first. Recommended palette: match the
+with `check_crop.py` at 1080x1350 first. Recommended palette: match the
 photo's mood via the palette-swatch workflow -- `navy_gold` or `red_navy`
 for night/skyline photos tends to work well since the palette mainly shows
 up in the small bottom release bar and the gold headline/starring accents,
@@ -266,7 +266,8 @@ mini-checklist) and a right "mailing address" column (an optional
 optional `industries` list, and `contact_lines`), like the postcard's
 addressee block -- both columns default to enough content that the space
 below the photo doesn't read as empty, plus a small `closer_text` line at
-the very bottom. Needs `photos.hero` sized for a ~1020x980 area (near-square) --
+the very bottom. Sized to fit within Instagram's 1350px feed-post limit --
+needs `photos.hero` sized for a ~1020x820 area (near-square) --
 check `check_crop.py` first; a scenic, recognizable-landmark photo (skyline,
 Merlion, a well-known building) sells the postcard concept best. Recommended
 palette: match via the palette-swatch workflow -- `navy_gold` tends to work
@@ -296,15 +297,14 @@ support `mirror` or `dark_mode`.
 
 ## Instagram sizing
 
-`neon_edge`, `flat_pop`, and `dark_chevron` all render at 1080x1350 (4:5),
-Instagram's recommended feed-post size, and `studio_split` renders at
-1080x1080 (1:1), Instagram's square feed-post size -- so all four post
-edge-to-edge with no cropping or letterboxing. `bold_impact` renders at
-1080x1527 (A4 paper proportions, for print). Every other template renders
-at the shared 1080x1620 (1:1.5) -- taller than Instagram's 1350px feed-post
-cap, so Instagram will crop or pad those slightly when posted; that's fine
-for WhatsApp/Facebook/printing, but for an Instagram feed post specifically,
-reach for one of the four templates above.
+Every template now fits Instagram's feed-post limits with no cropping or
+letterboxing. `studio_split` renders square at 1080x1080 (1:1); every other
+template renders at 1080 wide by at most 1350 tall (4:5, Instagram's max
+portrait feed-post ratio) -- most crop dynamically to their actual content
+height, which is often shorter than 1350 (see each template's entry above
+for its typical range). There's no longer a subset of templates to avoid
+for Instagram specifically -- pick based on the vibe/variety guidance in
+`SKILL.md` instead.
 
 ## Rearranging boxes with `mirror`
 

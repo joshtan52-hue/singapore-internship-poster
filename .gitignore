@@ -8,6 +8,7 @@ __pycache__/
 # Rendered output (keep the repo to source + examples, not generated posters)
 *.png
 !examples/**/*.png
+!references/design_examples/**/*.png
 output/
 outputs/
 
